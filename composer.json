@@ -1,0 +1,27 @@
+{
+  "name": "drmvc/router",
+  "type": "library",
+  "description": "Router",
+  "homepage": "https://drmvc.com/",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Paul Rock",
+      "email": "paul@drteam.rocks",
+      "homepage": "https://drteam.rocks/",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": "^7.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~6.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "DrMVC\\": "./src/"
+    }
+  },
+  "minimum-stability": "stable"
+}
