@@ -1,4 +1,6 @@
-<?php namespace DrMVC\Interfaces;
+<?php
+
+namespace DrMVC\Router\Interfaces;
 
 interface Router
 {
@@ -8,56 +10,25 @@ interface Router
     const METHODS = ['get', 'post', 'put', 'update', 'delete', 'option'];
 
     /**
+     * Custom error callback of class
+     *
+     * @param   callable|string $error
+     * @return  Router
+     */
+    public function error($error): Router;
+
+    /**
+     * Get current error object
+     * @return callable|string
+     */
+    public function getError();
+
+    /**
      * Parse URI by Regexp from routes
      *
      * @return  Route
      */
     public function parse();
-
-    /**
-     * GET method
-     *
-     * @param   string $pattern
-     * @param   callable $callable
-     * @return  Router
-     */
-    public function get(string $pattern, callable $callable): Router;
-
-    /**
-     * POST method
-     *
-     * @param   string $pattern
-     * @param   callable $callable
-     * @return  Router
-     */
-    public function post(string $pattern, callable $callable): Router;
-
-    /**
-     * PUT method
-     *
-     * @param   string $pattern
-     * @param   callable $callable
-     * @return  Router
-     */
-    public function put(string $pattern, callable $callable): Router;
-
-    /**
-     * DELETE method
-     *
-     * @param   string $pattern
-     * @param   callable $callable
-     * @return  Router
-     */
-    public function delete(string $pattern, callable $callable): Router;
-
-    /**
-     * OPTION method
-     *
-     * @param   string $pattern
-     * @param   callable $callable
-     * @return  Router
-     */
-    public function option(string $pattern, callable $callable): Router;
 
     /**
      * Any method should be callable

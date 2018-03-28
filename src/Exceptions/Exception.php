@@ -1,4 +1,6 @@
-<?php namespace DrMVC\Exceptions;
+<?php
+
+namespace DrMVC\Exceptions;
 
 class Exception extends \Exception
 {

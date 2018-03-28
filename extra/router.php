@@ -1,23 +1,31 @@
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use DrMVC\Route;
 use DrMVC\Router;
-use DrMVC\Url;
+use DrMVC\Router\Url;
 
-$url = new Url('https://example.com/action/zzz');
-$router = new Router($url);
+$request = new Url('https://example.com/aaa/bbb/vv');
+//$request = new Url('https://example.com/action/zzz');
+//$request = new Url('https://example.com/bbb/zzz/ccc');
 
+$router = new Router($request);
+
+// Set routes
 $router
+    ->get('/aaa/<action>/<action2>', DrMVC\Router\Controllers\Index::class)
+    ->get('/bbb/zzz/ccc', DrMVC\Router\Controllers\Index::class)
     ->get('/action/zzz',
         function () {
             echo "action\n";
         }
-    )
-    ->get('/asd',
-        function () {
-            echo "asd\n";
-        }
     );
 
-$router->parse()->execute();
+// Set custom error class or closure
+$router
+    ->error(DrMVC\Router\Controllers\Error::class);
+
+print_r($router);
+
+$test = $router->parse()->execute();
+
+print_r($test);

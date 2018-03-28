@@ -1,7 +1,16 @@
-<?php namespace DrMVC\Interfaces;
+<?php
+
+namespace DrMVC\Router\Interfaces;
 
 interface Url
 {
+    /**
+     * Detect current URI automatically
+     *
+     * @return  Url
+     */
+    public function autodetect(): Url;
+
     /**
      * Return only URI or URL
      *

@@ -1,4 +1,6 @@
-<?php namespace DrMVC;
+<?php
+
+namespace DrMVC\Router;
 
 class Url implements Interfaces\Url
 {
@@ -17,6 +19,17 @@ class Url implements Interfaces\Url
         if (null !== $url) {
             $this->setUrl($url);
         }
+    }
+
+    /**
+     * Detect current URI automatically
+     *
+     * @return  Interfaces\Url
+     */
+    public function autodetect(): Interfaces\Url
+    {
+        $this->setUrl($_SERVER['REQUEST_URI']);
+        return $this;
     }
 
     /**
@@ -51,5 +64,4 @@ class Url implements Interfaces\Url
         return $this;
     }
 
-    // TODO: implement autodetect
 }
