@@ -2,6 +2,9 @@
 
 namespace DrMVC\Router\Interfaces;
 
+use Zend\Diactoros\ServerRequest;
+use Zend\Diactoros\Response;
+
 interface Router
 {
     /**
@@ -10,12 +13,34 @@ interface Router
     const METHODS = ['get', 'post', 'put', 'update', 'delete', 'option'];
 
     /**
+     * @param   mixed $request
+     * @return  Router
+     */
+    public function setRequest($request): Router;
+
+    /**
+     * @return ServerRequest
+     */
+    public function getRequest(): ServerRequest;
+
+    /**
+     * @param   mixed $response
+     * @return  Router
+     */
+    public function setResponse($response): Router;
+
+    /**
+     * @return  Response
+     */
+    public function getResponse(): Response;
+
+    /**
      * Custom error callback of class
      *
      * @param   callable|string $error
      * @return  Router
      */
-    public function error($error): Router;
+    public function setError($error): Router;
 
     /**
      * Get current error object
@@ -24,11 +49,11 @@ interface Router
     public function getError();
 
     /**
-     * Parse URI by Regexp from routes
+     * Parse URI by Regexp from routes and return single route
      *
      * @return  Route
      */
-    public function parse();
+    public function getRoute();
 
     /**
      * Any method should be callable

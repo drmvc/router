@@ -2,6 +2,9 @@
 
 namespace DrMVC\Router;
 
+use Zend\Diactoros\ServerRequest;
+use Zend\Diactoros\Response;
+
 /**
  * Class Route
  * @package DrMVC
@@ -19,24 +22,43 @@ class Route implements Interfaces\Route
     private $_regexp;
 
     /**
-     * @var Interfaces\Callback
+     * @var mixed
      */
     private $_callback;
+
+    /**
+     * @var \Zend\Diactoros\ServerRequest
+     */
+    private $_request;
+
+    /**
+     * @var \Zend\Diactoros\Response
+     */
+    private $_response;
 
     /**
      * Route constructor.
      *
      * @param   string $method
      * @param   string $pattern
-     * @param   callable|string $callable
+     * @param   $callable
+     * @param   ServerRequest $request
+     * @param   Response $response
      */
-    public function __construct(string $method, string $pattern, $callable)
-    {
-        $this->setRoute($method, $pattern, $callable);
+    public function __construct(
+        string $method,
+        string $pattern,
+        $callable,
+        ServerRequest $request = null,
+        Response $response = null
+    ) {
+        $this->setRoute($method, $pattern, $callable, $request, $response);
     }
 
     /**
-     * @param array $variables
+     * Set variables of current class
+     *
+     * @param   array $variables
      */
     public function setVariables(array $variables)
     {
@@ -44,31 +66,7 @@ class Route implements Interfaces\Route
     }
 
     /**
-     * Set some new variable
-     *
-     * @param   string $key
-     * @param   string $value
-     * @return  Interfaces\Route
-     */
-    public function setVariable(string $key, string $value): Interfaces\Route
-    {
-        $this->_variables[$key] = $value;
-        return $this;
-    }
-
-    /**
-     * Get some variable by name
-     *
-     * @param   string $key
-     * @return  string
-     */
-    public function getVariable(string $key): string
-    {
-        return $this->_variables[$key];
-    }
-
-    /**
-     * Return a list of variables
+     * Return array of available variables
      *
      * @return  array
      */
@@ -82,25 +80,61 @@ class Route implements Interfaces\Route
      *
      * @param   string $method
      * @param   string $pattern
-     * @param   callable|string $callable
+     * @param   mixed $callable
      * @return  Interfaces\Route
      */
     public function setRoute(string $method, string $pattern, $callable): Interfaces\Route
     {
         return $this
             ->setRegexp($pattern)
-            ->setCallable($callable);
+            ->setCallback($callable);
+    }
+
+    /**
+     * @param   mixed $request
+     * @return  Interfaces\Route
+     */
+    public function setRequest($request): Interfaces\Route
+    {
+        $this->_request = $request;
+        return $this;
+    }
+
+    /**
+     * @return ServerRequest
+     */
+    public function getRequest(): ServerRequest
+    {
+        return $this->_request;
+    }
+
+    /**
+     * @param   mixed $response
+     * @return  Interfaces\Route
+     */
+    public function setResponse($response): Interfaces\Route
+    {
+        $this->_response = $response;
+        return $this;
+    }
+
+    /**
+     * @return Response
+     */
+    public function getResponse(): Response
+    {
+        return $this->_response;
     }
 
     /**
      * Set callable element or class
      *
-     * @param   callable|string $callable
+     * @param   mixed $callback
      * @return  Interfaces\Route
      */
-    public function setCallable($callable): Interfaces\Route
+    public function setCallback($callback): Interfaces\Route
     {
-        $this->_callback = new Callback($callable);
+        $this->_callback = $callback;
         return $this;
     }
 
@@ -109,7 +143,7 @@ class Route implements Interfaces\Route
      *
      * @return  Interfaces\Callback
      */
-    public function getCallable()
+    public function getCallback(): Interfaces\Callback
     {
         return $this->_callback;
     }
@@ -139,11 +173,4 @@ class Route implements Interfaces\Route
         return $this->_regexp;
     }
 
-    /**
-     * Call required closure or class
-     */
-    public function execute()
-    {
-        return $this->getCallable()->execute($this->getVariables());
-    }
 }

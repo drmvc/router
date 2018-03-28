@@ -11,33 +11,24 @@ interface Route
     const DEFAULT_ACTION = 'index';
 
     /**
-     * Call required closure or class
-     */
-    public function execute();
-
-    /**
-     * Route constructor.
+     * Return array of available variables
      *
-     * @param   string $method
-     * @param   string $regexp
-     * @param   callable|string $callable
+     * @return  array
      */
-    public function __construct(string $method, string $regexp, $callable);
+    public function getVariables(): array;
 
     /**
      * Return callable element
-     *
-     * @return  Callback
      */
-    public function getCallable();
+    public function getCallback();
 
     /**
      * Set callable element or class
      *
-     * @param   callable|string $callable
+     * @param   callable|string $callback
      * @return  Route
      */
-    public function setCallable($callable): Route;
+    public function setCallback($callback): Route;
 
     /**
      * Return regexp of current route

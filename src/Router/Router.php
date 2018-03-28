@@ -2,6 +2,8 @@
 
 namespace DrMVC\Router;
 
+use Zend\Diactoros\ServerRequest;
+use Zend\Diactoros\Response;
 use DrMVC\Exceptions\ArrayException;
 
 /**
@@ -16,12 +18,6 @@ use DrMVC\Exceptions\ArrayException;
 class Router implements Interfaces\Router
 {
     /**
-     * Current URL
-     * @var Url
-     */
-    private $_url;
-
-    /**
      * Array with all available routes
      * @var array
      */
@@ -31,19 +27,65 @@ class Router implements Interfaces\Router
      * Class with error inside
      * @var callable|string
      */
-    private $_error = 'DrMVC\Error';
+    private $_error = 'DrMVC\Router\Error';
 
+    /**
+     * @var \Zend\Diactoros\ServerRequest
+     */
+    private $_request;
 
-    public function __construct(Interfaces\Url $url = null)
+    /**
+     * @var \Zend\Diactoros\Response
+     */
+    private $_response;
+
+    /**
+     * Router constructor.
+     *
+     * @param   ServerRequest $request
+     * @param   Response $response
+     */
+    public function __construct(ServerRequest $request, Response $response)
     {
-        if ($url instanceof Interfaces\Url) {
-            $this->setUrl($url);
-        }
+        $this
+            ->setRequest($request)
+            ->setResponse($response);
+    }
 
-        if ($url === null) {
-            $url = (new Url())->autodetect();
-            $this->setUrl($url);
-        }
+    /**
+     * @param   mixed $request
+     * @return  Interfaces\Router
+     */
+    public function setRequest($request): Interfaces\Router
+    {
+        $this->_request = $request;
+        return $this;
+    }
+
+    /**
+     * @return ServerRequest
+     */
+    public function getRequest(): ServerRequest
+    {
+        return $this->_request;
+    }
+
+    /**
+     * @param   mixed $response
+     * @return  Interfaces\Router
+     */
+    public function setResponse($response): Interfaces\Router
+    {
+        $this->_response = $response;
+        return $this;
+    }
+
+    /**
+     * @return Response
+     */
+    public function getResponse(): Response
+    {
+        return $this->_response;
     }
 
     /**
@@ -52,7 +94,7 @@ class Router implements Interfaces\Router
      * @param   callable|string $error
      * @return  Interfaces\Router
      */
-    public function error($error): Interfaces\Router
+    public function setError($error): Interfaces\Router
     {
         $this->_error = $error;
         return $this;
@@ -63,39 +105,55 @@ class Router implements Interfaces\Router
      */
     public function getError()
     {
-        return $this->_error;
+        $error = $this->_error;
+        return new $error();
     }
 
     /**
-     * Parse URI by Regexp from routes
+     * Parse URI by Regexp from routes and return single route
      *
-     * @return  object
+     * @return  Interfaces\Route
      */
-    public function parse()
+    public function getRoute()
     {
         // Find route by regexp and URI
         $matches = array_map(
-            function ($regexp, $route) {
-                $uri = $this->_url->getUri();
+            // Foreach emulation
+            function($regexp, $route) {
+                $uri = $this->getRequest()->getUri()->getPath();
                 $match = preg_match_all($regexp, $uri, $matches);
 
+                // If something found
                 if ($match) {
+                    // Set array of variables
                     $route->setVariables($matches);
                     return $route;
                 } else {
                     return null;
                 }
             },
+            // Array with keys
             $this->getRoutes(true),
+            // Array with values
             $this->getRoutes()
         );
 
         // Cleanup the array of matches, then reindex array
         $matches = array_values(array_filter($matches));
 
-        return !empty($matches)
-            ? $matches[0]   // Here the Route() object
-            : new Callback($this->getError());
+        // If we have some classes in result of regexp
+        if (!empty($matches)) {
+            // Take first from matches
+            $result = $matches[0]; // Here the Route() object
+        } else {
+            // Create new object with error inside
+            $result = $this->getError();
+        }
+
+        $result->setRequest($this->getRequest());
+        $result->setResponse($this->getResponse());
+
+        return $result;
     }
 
     /**
@@ -109,7 +167,7 @@ class Router implements Interfaces\Router
     {
         $pattern = $args[0];
         $callable = $args[1];
-        $route = new Route($method, $pattern, $callable);
+        $route = new Route($method, $pattern, $callable, $this->getRequest(), $this->getResponse());
         $this->setRoute($route);
         return $this;
     }
@@ -126,18 +184,6 @@ class Router implements Interfaces\Router
         if (in_array($method, Router::METHODS)) {
             $this->set($method, $args);
         }
-        return $this;
-    }
-
-    /**
-     * Set current URL into the variable
-     *
-     * @param   Interfaces\Url $url
-     * @return  Interfaces\Router
-     */
-    private function setUrl(Interfaces\Url $url): Interfaces\Router
-    {
-        $this->_url = $url;
         return $this;
     }
 
@@ -176,7 +222,7 @@ class Router implements Interfaces\Router
     public function map(array $methods, string $pattern, callable $callable): Interfaces\Router
     {
         array_map(
-            function ($method) use ($pattern, $callable) {
+            function($method) use ($pattern, $callable) {
                 $method = strtolower($method);
 
                 try {

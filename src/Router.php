@@ -2,10 +2,12 @@
 
 namespace DrMVC;
 
+use \DrMVC\Router\Router as RouterFactory;
+
 /**
- * Class Router - Abstract class for access to router
+ * Class Router - Abstract class for access to factory
  * @package DrMVC
  */
-class Router extends Router\Router
+class Router extends RouterFactory
 {
 }

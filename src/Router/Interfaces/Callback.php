@@ -11,4 +11,5 @@ interface Callback
      * @return  mixed
      */
     public function execute(array $args);
+
 }
