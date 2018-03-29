@@ -39,11 +39,11 @@ class Route implements RouteInterface
     /**
      * Route constructor.
      *
-     * @param   string $method
-     * @param   string $regexp
-     * @param   $callable
-     * @param   ServerRequestInterface $request
-     * @param   ResponseInterface $response
+     * @param   string $method Method of received query
+     * @param   string $regexp Regular expression
+     * @param   callable|string $callable Class name or callback
+     * @param   ServerRequestInterface $request PSR-7 request
+     * @param   ResponseInterface $response RSP-7 response
      */
     public function __construct(
         string $method,
@@ -59,10 +59,12 @@ class Route implements RouteInterface
      * Set variables of current class
      *
      * @param   array $variables
+     * @return  RouteInterface
      */
-    public function setVariables(array $variables)
+    public function setVariables(array $variables): RouteInterface
     {
         $this->_variables = $variables;
+        return $this;
     }
 
     /**
@@ -78,12 +80,12 @@ class Route implements RouteInterface
     /**
      * Set single route
      *
-     * @param   string $method - Method of received query
-     * @param   string $regexp - Regular expression
-     * @param   $callable - Class name or callback
-     * @param   ServerRequestInterface $request - PSR-7 request
-     * @param   ResponseInterface $response - RSP-7 response
-     * @return  Route
+     * @param   string $method Method of received query
+     * @param   string $regexp Regular expression
+     * @param   callable|string $callable Class name or callback
+     * @param   ServerRequestInterface $request PSR-7 request
+     * @param   ResponseInterface $response RSP-7 response
+     * @return  RouteInterface
      */
     public function setRoute(
         string $method,
@@ -100,7 +102,7 @@ class Route implements RouteInterface
     }
 
     /**
-     * Set PSR request
+     * Set PSR-7 request
      *
      * @param   ServerRequestInterface $request - PSR-7 request
      * @return  RouteInterface
@@ -138,7 +140,7 @@ class Route implements RouteInterface
     }
 
     /**
-     * Get RSR response
+     * Get RSR-7 response
      *
      * @return  ResponseInterface
      */

@@ -17,6 +17,13 @@ interface RouterInterface
     const METHODS = ['get', 'post', 'put', 'update', 'delete', 'option'];
 
     /**
+     * @param   string $method
+     * @param   array $args
+     * @return  RouterInterface
+     */
+    public function __call(string $method, array $args): RouterInterface;
+
+    /**
      * Any method should be callable
      *
      * @param   string $pattern

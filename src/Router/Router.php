@@ -13,6 +13,7 @@ use Psr\Http\Message\ResponseInterface;
  * @method Router put(string $pattern, callable $callable): Router
  * @method Router delete(string $pattern, callable $callable): Router
  * @method Router option(string $pattern, callable $callable): Router
+ * @since 3.0.0
  */
 class Router implements RouterInterface
 {
@@ -52,13 +53,13 @@ class Router implements RouterInterface
     }
 
     /**
-     * Some kind of magic ;) details in header of this class, in @methods
+     * Some kind of magic ;) details in header of this class, in 'methods'
      *
      * @param   string $method
-     * @param   $args
+     * @param   array $args
      * @return  RouterInterface
      */
-    public function __call(string $method, $args)
+    public function __call(string $method, array $args): RouterInterface
     {
         if (in_array($method, Router::METHODS)) {
             $this->set($method, $args);
@@ -87,7 +88,7 @@ class Router implements RouterInterface
      *
      * @param   array $methods
      * @param   string $pattern
-     * @param   $callable
+     * @param   callable|string $callable
      * @return  RouterInterface
      */
     public function map(array $methods, string $pattern, $callable): RouterInterface

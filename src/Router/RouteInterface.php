@@ -16,7 +16,7 @@ interface RouteInterface
     /**
      * Set PSR-7 request
      *
-     * @param   ServerRequestInterface $request - PSR-7 request
+     * @param   ServerRequestInterface $request PSR-7 request
      * @return  RouteInterface
      */
     public function setRequest(ServerRequestInterface $request): RouteInterface;
@@ -31,7 +31,7 @@ interface RouteInterface
     /**
      * Set PSR-7 response
      *
-     * @param   ResponseInterface $response - RSP-7 response
+     * @param   ResponseInterface $response RSP-7 response
      * @return  RouteInterface
      */
     public function setResponse(ResponseInterface $response): RouteInterface;
@@ -44,18 +44,19 @@ interface RouteInterface
     public function getResponse(): ResponseInterface;
 
     /**
+     * Set variables of current class
+     *
+     * @param   array $variables
+     * @return  RouteInterface
+     */
+    public function setVariables(array $variables): RouteInterface;
+
+    /**
      * Return array of available variables
      *
      * @return  array
      */
     public function getVariables(): array;
-
-    /**
-     * Return callable element
-     *
-     * @return  callable|string
-     */
-    public function getCallback();
 
     /**
      * Set callable element or class
@@ -66,11 +67,11 @@ interface RouteInterface
     public function setCallback($callback): RouteInterface;
 
     /**
-     * Return regexp of current route
+     * Return callable element
      *
-     * @return  string
+     * @return  callable|string
      */
-    public function getRegexp(): string;
+    public function getCallback();
 
     /**
      * Set regexp of current route
@@ -81,13 +82,20 @@ interface RouteInterface
     public function setRegexp(string $regexp): RouteInterface;
 
     /**
+     * Return regexp of current route
+     *
+     * @return  string
+     */
+    public function getRegexp(): string;
+
+    /**
      * Set single route
      *
-     * @param   string $method - Method of received query
-     * @param   string $regexp - Regular expression
-     * @param   $callable - Class name or callback
-     * @param   ServerRequestInterface $request - PSR-7 request
-     * @param   ResponseInterface $response - RSP-7 response
+     * @param   string $method Method of received query
+     * @param   string $regexp Regular expression
+     * @param   callable|string $callable Class name or callback
+     * @param   ServerRequestInterface $request PSR-7 request
+     * @param   ResponseInterface $response RSP-7 response
      * @return  RouteInterface
      */
     public function setRoute(
