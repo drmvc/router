@@ -23,11 +23,11 @@ $router = new Router($request, $response);
 
 // Set routes
 $router
-    ->get('/aaa/<action>/<action2>', DrMVC\Router\Controllers\Index::class)
-    ->get('/bbb/zzz/ccc', DrMVC\Router\Controllers\Index::class)
+    ->get('/aaa/<action>/<action2>', DrMVC\Controllers\Index::class)
+    ->get('/bbb/zzz/ccc', DrMVC\Controllers\Index::class . ':default')
     ->get(
         '/action/zzz',
-        function () {
+        function() {
             echo "action\n";
         }
     );
