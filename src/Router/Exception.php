@@ -1,6 +1,6 @@
 <?php
 
-namespace DrMVC\Exceptions;
+namespace DrMVC\Router;
 
 class Exception extends \Exception
 {

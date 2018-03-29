@@ -25,14 +25,15 @@ $router = new Router($request, $response);
 $router
     ->get('/aaa/<action>/<action2>', DrMVC\Router\Controllers\Index::class)
     ->get('/bbb/zzz/ccc', DrMVC\Router\Controllers\Index::class)
-    ->get('/action/zzz',
+    ->get(
+        '/action/zzz',
         function () {
             echo "action\n";
         }
     );
 
-$parsed = $router->getRoute();
-print_r($parsed);
+$route = $router->getRoute();
+print_r($route);
 ```
 
 ## About PHP Unit Tests

@@ -2,8 +2,8 @@
 
 namespace DrMVC\Router;
 
-use Zend\Diactoros\ServerRequest;
-use Zend\Diactoros\Response;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class Route
@@ -27,12 +27,12 @@ class Route implements Interfaces\Route
     private $_callback;
 
     /**
-     * @var \Zend\Diactoros\ServerRequest
+     * @var ServerRequestInterface
      */
     private $_request;
 
     /**
-     * @var \Zend\Diactoros\Response
+     * @var ResponseInterface
      */
     private $_response;
 
@@ -40,19 +40,19 @@ class Route implements Interfaces\Route
      * Route constructor.
      *
      * @param   string $method
-     * @param   string $pattern
+     * @param   string $regexp
      * @param   $callable
-     * @param   ServerRequest $request
-     * @param   Response $response
+     * @param   ServerRequestInterface $request
+     * @param   ResponseInterface $response
      */
     public function __construct(
         string $method,
-        string $pattern,
+        string $regexp,
         $callable,
-        ServerRequest $request = null,
-        Response $response = null
+        ServerRequestInterface $request = null,
+        ResponseInterface $response = null
     ) {
-        $this->setRoute($method, $pattern, $callable, $request, $response);
+        $this->setRoute($method, $regexp, $callable, $request, $response);
     }
 
     /**
@@ -78,50 +78,71 @@ class Route implements Interfaces\Route
     /**
      * Set single route
      *
-     * @param   string $method
-     * @param   string $pattern
-     * @param   mixed $callable
-     * @return  Interfaces\Route
+     * @param   string $method - Method of received query
+     * @param   string $regexp - Regular expression
+     * @param   $callable - Class name or callback
+     * @param   ServerRequestInterface $request - PSR-7 request
+     * @param   ResponseInterface $response - RSP-7 response
+     * @return  Route
      */
-    public function setRoute(string $method, string $pattern, $callable): Interfaces\Route
-    {
+    public function setRoute(
+        string $method,
+        string $regexp,
+        $callable,
+        ServerRequestInterface $request = null,
+        ResponseInterface $response = null
+    ): Interfaces\Route {
         return $this
-            ->setRegexp($pattern)
-            ->setCallback($callable);
+            ->setRegexp($regexp)
+            ->setCallback($callable)
+            ->setRequest($request)
+            ->setResponse($response);
     }
 
     /**
-     * @param   mixed $request
+     * Set PSR request
+     *
+     * @param   ServerRequestInterface $request - PSR-7 request
      * @return  Interfaces\Route
      */
-    public function setRequest($request): Interfaces\Route
+    public function setRequest(ServerRequestInterface $request = null): Interfaces\Route
     {
-        $this->_request = $request;
+        if (!empty($request)) {
+            $this->_request = $request;
+        }
         return $this;
     }
 
     /**
-     * @return ServerRequest
+     * Get PSR request
+     *
+     * @return  ServerRequestInterface
      */
-    public function getRequest(): ServerRequest
+    public function getRequest(): ServerRequestInterface
     {
         return $this->_request;
     }
 
     /**
+     * Set RSR response
+     *
      * @param   mixed $response
      * @return  Interfaces\Route
      */
-    public function setResponse($response): Interfaces\Route
+    public function setResponse(ResponseInterface $response = null): Interfaces\Route
     {
-        $this->_response = $response;
+        if (!empty($response)) {
+            $this->_response = $response;
+        }
         return $this;
     }
 
     /**
-     * @return Response
+     * Get RSR response
+     *
+     * @return  ResponseInterface
      */
-    public function getResponse(): Response
+    public function getResponse(): ResponseInterface
     {
         return $this->_response;
     }

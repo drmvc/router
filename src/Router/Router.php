@@ -4,7 +4,6 @@ namespace DrMVC\Router;
 
 use Zend\Diactoros\ServerRequest;
 use Zend\Diactoros\Response;
-use DrMVC\Exceptions\ArrayException;
 
 /**
  * Class Router
@@ -50,6 +49,78 @@ class Router implements Interfaces\Router
         $this
             ->setRequest($request)
             ->setResponse($response);
+    }
+
+    /**
+     * Some kind of magic ;) details in header of this class, in @methods
+     *
+     * @param   string $method
+     * @param   $args
+     * @return  Interfaces\Router
+     */
+    public function __call(string $method, $args)
+    {
+        if (in_array($method, Router::METHODS)) {
+            $this->set($method, $args);
+        }
+        return $this;
+    }
+
+    /**
+     * Abstraction of setter
+     *
+     * @param   string $method
+     * @param   array $args
+     * @return  Interfaces\Router
+     */
+    private function set(string $method, array $args): Interfaces\Router
+    {
+        $pattern = $args[0];
+        $callable = $args[1];
+        $route = new Route($method, $pattern, $callable, $this->getRequest(), $this->getResponse());
+        $this->setRoute($route);
+        return $this;
+    }
+
+    /**
+     * Callable must be only selected methods
+     *
+     * @param   array $methods
+     * @param   string $pattern
+     * @param   callable $callable
+     * @return  Interfaces\Router
+     */
+    public function map(array $methods, string $pattern, callable $callable): Interfaces\Router
+    {
+        array_map(
+            function($method) use ($pattern, $callable) {
+                $method = strtolower($method);
+
+                try {
+                    if (!in_array($method, Router::METHODS)) {
+                        throw new Exception("Value \"$method\" is not in array");
+                    }
+                } catch (Exception $e) {
+                    // Catch empty because __construct overloaded
+                }
+
+                $this->$method($pattern, $callable);
+            },
+            $methods
+        );
+        return $this;
+    }
+
+    /**
+     * Any method should be callable
+     *
+     * @param   string $pattern
+     * @param   callable $callable
+     * @return  Interfaces\Router
+     */
+    public function any(string $pattern, callable $callable): Interfaces\Router
+    {
+        return $this->map(Router::METHODS, $pattern, $callable);
     }
 
     /**
@@ -110,6 +181,19 @@ class Router implements Interfaces\Router
     }
 
     /**
+     * Add route into the array of routes
+     *
+     * @param   Interfaces\Route $route
+     * @return  Interfaces\Router
+     */
+    public function setRoute(Interfaces\Route $route): Interfaces\Router
+    {
+        $regexp = $route->getRegexp();
+        $this->_routes[$regexp] = $route;
+        return $this;
+    }
+
+    /**
      * Parse URI by Regexp from routes and return single route
      *
      * @return  Interfaces\Route
@@ -157,48 +241,6 @@ class Router implements Interfaces\Router
     }
 
     /**
-     * Abstraction of setter
-     *
-     * @param   string $method
-     * @param   array $args
-     * @return  Interfaces\Router
-     */
-    private function set(string $method, array $args): Interfaces\Router
-    {
-        $pattern = $args[0];
-        $callable = $args[1];
-        $route = new Route($method, $pattern, $callable, $this->getRequest(), $this->getResponse());
-        $this->setRoute($route);
-        return $this;
-    }
-
-    /**
-     * Some kind of magic ;) details in header of this class, in @methods
-     *
-     * @param   string $method
-     * @param   $args
-     * @return  Interfaces\Router
-     */
-    public function __call(string $method, $args)
-    {
-        if (in_array($method, Router::METHODS)) {
-            $this->set($method, $args);
-        }
-        return $this;
-    }
-
-    /**
-     * Add route into the array of routes
-     *
-     * @param   Interfaces\Route $route
-     */
-    private function setRoute(Interfaces\Route $route)
-    {
-        $regexp = $route->getRegexp();
-        $this->_routes[$regexp] = $route;
-    }
-
-    /**
      * Get all available routes
      *
      * @param   bool $keys - Return only keys
@@ -211,41 +253,4 @@ class Router implements Interfaces\Router
             : $this->_routes;
     }
 
-    /**
-     * Callable must be only selected methods
-     *
-     * @param   array $methods
-     * @param   string $pattern
-     * @param   callable $callable
-     * @return  Interfaces\Router
-     */
-    public function map(array $methods, string $pattern, callable $callable): Interfaces\Router
-    {
-        array_map(
-            function($method) use ($pattern, $callable) {
-                $method = strtolower($method);
-
-                try {
-                    ArrayException::inArray($method, Router::METHODS);
-                } catch (ArrayException $e) {
-                }
-
-                $this->$method($pattern, $callable);
-            },
-            $methods
-        );
-        return $this;
-    }
-
-    /**
-     * Any method should be callable
-     *
-     * @param   string $pattern
-     * @param   callable $callable
-     * @return  Interfaces\Router
-     */
-    public function any(string $pattern, callable $callable): Interfaces\Router
-    {
-        return $this->map(Router::METHODS, $pattern, $callable);
-    }
 }

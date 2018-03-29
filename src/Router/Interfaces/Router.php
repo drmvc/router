@@ -75,6 +75,14 @@ interface Router
     public function map(array $methods, string $pattern, callable $callable): Router;
 
     /**
+     * Add route into the array of routes
+     *
+     * @param   Route $route
+     * @return  Router
+     */
+    public function setRoute(Route $route): Router;
+
+    /**
      * Get all available routes
      *
      * @param   bool $keys - Return only keys
