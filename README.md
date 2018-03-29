@@ -1,3 +1,10 @@
+[![Latest Stable Version](https://poser.pugx.org/drmvc/router/v/stable)](https://packagist.org/packages/drmvc/router)
+[![Build Status](https://travis-ci.org/drmvc/router.svg?branch=master)](https://travis-ci.org/drmvc/router)
+[![Total Downloads](https://poser.pugx.org/drmvc/router/downloads)](https://packagist.org/packages/drmvc/router)
+[![License](https://poser.pugx.org/drmvc/router/license)](https://packagist.org/packages/drmvc/router)
+[![PHP 7 ready](https://php7ready.timesplinter.ch/drmvc/router/master/badge.svg)](https://travis-ci.org/drmvc/router)
+[![Scrutinizer CQ](https://scrutinizer-ci.com/g/drmvc/router/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/drmvc/router/)
+
 # DrMVC\Router
 
 Simple router based on PSR-7 HTTP Message implementation by Zend.
