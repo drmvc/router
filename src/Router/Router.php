@@ -27,7 +27,7 @@ class Router implements RouterInterface
      * Class with error inside
      * @var callable|string
      */
-    private $_error = 'DrMVC\Router\Error';
+    private $_error = Error::class;
 
     /**
      * @var ServerRequestInterface
@@ -76,8 +76,7 @@ class Router implements RouterInterface
      */
     private function set(string $method, array $args): RouterInterface
     {
-        $pattern = $args[0];
-        $callable = $args[1];
+        list($pattern, $callable) = $args;
         $route = new Route($method, $pattern, $callable, $this->getRequest(), $this->getResponse());
         $this->setRoute($route);
         return $this;
@@ -98,7 +97,7 @@ class Router implements RouterInterface
                 $method = strtolower($method);
 
                 try {
-                    if (!in_array($method, Router::METHODS)) {
+                    if (!\in_array($method, self::METHODS, false)) {
                         throw new Exception("Value \"$method\" is not in array");
                     }
                 } catch (Exception $e) {
@@ -121,7 +120,7 @@ class Router implements RouterInterface
      */
     public function any(string $pattern, $callable): RouterInterface
     {
-        return $this->map(Router::METHODS, $pattern, $callable);
+        return $this->map(self::METHODS, $pattern, $callable);
     }
 
     /**
@@ -178,7 +177,11 @@ class Router implements RouterInterface
     public function getError()
     {
         $error = $this->_error;
-        return new $error();
+        // If string inside then we work on class
+        if (\is_string($error)) {
+            $error = new $error();
+        }
+        return $error;
     }
 
     /**
@@ -213,9 +216,8 @@ class Router implements RouterInterface
                     // Set array of variables
                     $route->setVariables($matches);
                     return $route;
-                } else {
-                    return null;
                 }
+                return null;
             },
             // Array with keys
             $this->getRoutes(true),

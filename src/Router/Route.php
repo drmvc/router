@@ -52,7 +52,10 @@ class Route implements RouteInterface
         ServerRequestInterface $request = null,
         ResponseInterface $response = null
     ) {
-        $this->setRoute($method, $regexp, $callable, $request, $response);
+        $this
+            ->setRoute($method, $regexp, $callable)
+            ->setRequest($request)
+            ->setResponse($response);
     }
 
     /**
@@ -83,22 +86,16 @@ class Route implements RouteInterface
      * @param   string $method Method of received query
      * @param   string $regexp Regular expression
      * @param   callable|string $callable Class name or callback
-     * @param   ServerRequestInterface $request PSR-7 request
-     * @param   ResponseInterface $response RSP-7 response
      * @return  RouteInterface
      */
     public function setRoute(
         string $method,
         string $regexp,
-        $callable,
-        ServerRequestInterface $request = null,
-        ResponseInterface $response = null
+        $callable
     ): RouteInterface {
         return $this
             ->setRegexp($regexp)
-            ->setCallback($callable)
-            ->setRequest($request)
-            ->setResponse($response);
+            ->setCallback($callable);
     }
 
     /**
@@ -109,7 +106,7 @@ class Route implements RouteInterface
      */
     public function setRequest(ServerRequestInterface $request = null): RouteInterface
     {
-        if (!empty($request)) {
+        if (null !== $request) {
             $this->_request = $request;
         }
         return $this;
