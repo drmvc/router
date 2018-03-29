@@ -61,7 +61,7 @@ class Router implements RouterInterface
      */
     public function __call(string $method, array $args): RouterInterface
     {
-        if (in_array($method, Router::METHODS)) {
+        if (\in_array($method, self::METHODS, false)) {
             $this->set($method, $args);
         }
         return $this;
@@ -172,7 +172,9 @@ class Router implements RouterInterface
     }
 
     /**
-     * @return callable|string
+     * Get error class or closure
+     *
+     * @return  callable|object
      */
     public function getError()
     {
