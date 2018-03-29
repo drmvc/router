@@ -1,36 +1,44 @@
 <?php
 
-namespace DrMVC\Router\Interfaces;
+namespace DrMVC\Router;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Interface Route
- * @package DrMVC\Interfaces
+ * Interface RouteInterface
+ * @package DrMVC\Router\Interfaces
  */
-interface Route
+interface RouteInterface
 {
     const DEFAULT_ACTION = 'index';
 
     /**
+     * Set PSR-7 request
+     *
      * @param   ServerRequestInterface $request - PSR-7 request
-     * @return  Route
+     * @return  RouteInterface
      */
-    public function setRequest(ServerRequestInterface $request): Route;
+    public function setRequest(ServerRequestInterface $request): RouteInterface;
 
     /**
-     * @return ServerRequestInterface
+     * Get PSR-7 request
+     *
+     * @return  ServerRequestInterface
      */
     public function getRequest(): ServerRequestInterface;
 
     /**
+     * Set PSR-7 response
+     *
      * @param   ResponseInterface $response - RSP-7 response
-     * @return  Route
+     * @return  RouteInterface
      */
-    public function setResponse(ResponseInterface $response): Route;
+    public function setResponse(ResponseInterface $response): RouteInterface;
 
     /**
+     * Get PSR-7 response
+     *
      * @return  ResponseInterface
      */
     public function getResponse(): ResponseInterface;
@@ -44,6 +52,8 @@ interface Route
 
     /**
      * Return callable element
+     *
+     * @return  callable|string
      */
     public function getCallback();
 
@@ -51,9 +61,9 @@ interface Route
      * Set callable element or class
      *
      * @param   callable|string $callback
-     * @return  Route
+     * @return  RouteInterface
      */
-    public function setCallback($callback): Route;
+    public function setCallback($callback): RouteInterface;
 
     /**
      * Return regexp of current route
@@ -66,9 +76,9 @@ interface Route
      * Set regexp of current route
      *
      * @param   string $regexp
-     * @return  Route
+     * @return  RouteInterface
      */
-    public function setRegexp(string $regexp): Route;
+    public function setRegexp(string $regexp): RouteInterface;
 
     /**
      * Set single route
@@ -78,7 +88,7 @@ interface Route
      * @param   $callable - Class name or callback
      * @param   ServerRequestInterface $request - PSR-7 request
      * @param   ResponseInterface $response - RSP-7 response
-     * @return  Route
+     * @return  RouteInterface
      */
     public function setRoute(
         string $method,
@@ -86,6 +96,6 @@ interface Route
         $callable,
         ServerRequestInterface $request,
         ResponseInterface $response
-    ): Route;
+    ): RouteInterface;
 
 }

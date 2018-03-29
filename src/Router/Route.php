@@ -9,7 +9,7 @@ use Psr\Http\Message\ResponseInterface;
  * Class Route
  * @package DrMVC
  */
-class Route implements Interfaces\Route
+class Route implements RouteInterface
 {
     /**
      * @var array
@@ -91,7 +91,7 @@ class Route implements Interfaces\Route
         $callable,
         ServerRequestInterface $request = null,
         ResponseInterface $response = null
-    ): Interfaces\Route {
+    ): RouteInterface {
         return $this
             ->setRegexp($regexp)
             ->setCallback($callable)
@@ -103,9 +103,9 @@ class Route implements Interfaces\Route
      * Set PSR request
      *
      * @param   ServerRequestInterface $request - PSR-7 request
-     * @return  Interfaces\Route
+     * @return  RouteInterface
      */
-    public function setRequest(ServerRequestInterface $request = null): Interfaces\Route
+    public function setRequest(ServerRequestInterface $request = null): RouteInterface
     {
         if (!empty($request)) {
             $this->_request = $request;
@@ -127,9 +127,9 @@ class Route implements Interfaces\Route
      * Set RSR response
      *
      * @param   mixed $response
-     * @return  Interfaces\Route
+     * @return  RouteInterface
      */
-    public function setResponse(ResponseInterface $response = null): Interfaces\Route
+    public function setResponse(ResponseInterface $response = null): RouteInterface
     {
         if (!empty($response)) {
             $this->_response = $response;
@@ -151,9 +151,9 @@ class Route implements Interfaces\Route
      * Set callable element or class
      *
      * @param   mixed $callback
-     * @return  Interfaces\Route
+     * @return  RouteInterface
      */
-    public function setCallback($callback): Interfaces\Route
+    public function setCallback($callback): RouteInterface
     {
         $this->_callback = $callback;
         return $this;
@@ -162,9 +162,9 @@ class Route implements Interfaces\Route
     /**
      * Return callable element
      *
-     * @return  Interfaces\Callback
+     * @return  callable|string
      */
-    public function getCallback(): Interfaces\Callback
+    public function getCallback()
     {
         return $this->_callback;
     }
@@ -173,9 +173,9 @@ class Route implements Interfaces\Route
      * Set regexp of current route
      *
      * @param   string $regexp
-     * @return  Interfaces\Route
+     * @return  RouteInterface
      */
-    public function setRegexp(string $regexp): Interfaces\Route
+    public function setRegexp(string $regexp): RouteInterface
     {
         $pattern = ['/</', '/>/'];
         $replace = ['(?P<', '>.+)'];

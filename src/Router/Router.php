@@ -2,19 +2,19 @@
 
 namespace DrMVC\Router;
 
-use Zend\Diactoros\ServerRequest;
-use Zend\Diactoros\Response;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class Router
  * @package DrMVC
- * @method Router get(string $pattern, callable $callable): Interfaces\Router
- * @method Router post(string $pattern, callable $callable): Interfaces\Router
- * @method Router put(string $pattern, callable $callable): Interfaces\Router
- * @method Router delete(string $pattern, callable $callable): Interfaces\Router
- * @method Router option(string $pattern, callable $callable): Interfaces\Router
+ * @method Router get(string $pattern, callable $callable): Router
+ * @method Router post(string $pattern, callable $callable): Router
+ * @method Router put(string $pattern, callable $callable): Router
+ * @method Router delete(string $pattern, callable $callable): Router
+ * @method Router option(string $pattern, callable $callable): Router
  */
-class Router implements Interfaces\Router
+class Router implements RouterInterface
 {
     /**
      * Array with all available routes
@@ -29,22 +29,22 @@ class Router implements Interfaces\Router
     private $_error = 'DrMVC\Router\Error';
 
     /**
-     * @var \Zend\Diactoros\ServerRequest
+     * @var ServerRequestInterface
      */
     private $_request;
 
     /**
-     * @var \Zend\Diactoros\Response
+     * @var ResponseInterface
      */
     private $_response;
 
     /**
      * Router constructor.
      *
-     * @param   ServerRequest $request
-     * @param   Response $response
+     * @param   ServerRequestInterface $request
+     * @param   ResponseInterface $response
      */
-    public function __construct(ServerRequest $request, Response $response)
+    public function __construct(ServerRequestInterface $request, ResponseInterface $response)
     {
         $this
             ->setRequest($request)
@@ -56,7 +56,7 @@ class Router implements Interfaces\Router
      *
      * @param   string $method
      * @param   $args
-     * @return  Interfaces\Router
+     * @return  RouterInterface
      */
     public function __call(string $method, $args)
     {
@@ -71,9 +71,9 @@ class Router implements Interfaces\Router
      *
      * @param   string $method
      * @param   array $args
-     * @return  Interfaces\Router
+     * @return  RouterInterface
      */
-    private function set(string $method, array $args): Interfaces\Router
+    private function set(string $method, array $args): RouterInterface
     {
         $pattern = $args[0];
         $callable = $args[1];
@@ -87,10 +87,10 @@ class Router implements Interfaces\Router
      *
      * @param   array $methods
      * @param   string $pattern
-     * @param   callable $callable
-     * @return  Interfaces\Router
+     * @param   $callable
+     * @return  RouterInterface
      */
-    public function map(array $methods, string $pattern, callable $callable): Interfaces\Router
+    public function map(array $methods, string $pattern, $callable): RouterInterface
     {
         array_map(
             function($method) use ($pattern, $callable) {
@@ -115,46 +115,46 @@ class Router implements Interfaces\Router
      * Any method should be callable
      *
      * @param   string $pattern
-     * @param   callable $callable
-     * @return  Interfaces\Router
+     * @param   callable|string $callable
+     * @return  RouterInterface
      */
-    public function any(string $pattern, callable $callable): Interfaces\Router
+    public function any(string $pattern, $callable): RouterInterface
     {
         return $this->map(Router::METHODS, $pattern, $callable);
     }
 
     /**
      * @param   mixed $request
-     * @return  Interfaces\Router
+     * @return  RouterInterface
      */
-    public function setRequest($request): Interfaces\Router
+    public function setRequest($request): RouterInterface
     {
         $this->_request = $request;
         return $this;
     }
 
     /**
-     * @return ServerRequest
+     * @return ServerRequestInterface
      */
-    public function getRequest(): ServerRequest
+    public function getRequest(): ServerRequestInterface
     {
         return $this->_request;
     }
 
     /**
      * @param   mixed $response
-     * @return  Interfaces\Router
+     * @return  RouterInterface
      */
-    public function setResponse($response): Interfaces\Router
+    public function setResponse($response): RouterInterface
     {
         $this->_response = $response;
         return $this;
     }
 
     /**
-     * @return Response
+     * @return ResponseInterface
      */
-    public function getResponse(): Response
+    public function getResponse(): ResponseInterface
     {
         return $this->_response;
     }
@@ -163,9 +163,9 @@ class Router implements Interfaces\Router
      * Overwrite default error class
      *
      * @param   callable|string $error
-     * @return  Interfaces\Router
+     * @return  RouterInterface
      */
-    public function setError($error): Interfaces\Router
+    public function setError($error): RouterInterface
     {
         $this->_error = $error;
         return $this;
@@ -183,10 +183,10 @@ class Router implements Interfaces\Router
     /**
      * Add route into the array of routes
      *
-     * @param   Interfaces\Route $route
-     * @return  Interfaces\Router
+     * @param   RouteInterface $route
+     * @return  RouterInterface
      */
-    public function setRoute(Interfaces\Route $route): Interfaces\Router
+    public function setRoute(RouteInterface $route): RouterInterface
     {
         $regexp = $route->getRegexp();
         $this->_routes[$regexp] = $route;
@@ -196,13 +196,13 @@ class Router implements Interfaces\Router
     /**
      * Parse URI by Regexp from routes and return single route
      *
-     * @return  Interfaces\Route
+     * @return  RouteInterface
      */
-    public function getRoute()
+    public function getRoute(): RouteInterface
     {
         // Find route by regexp and URI
         $matches = array_map(
-            // Foreach emulation
+        // Foreach emulation
             function($regexp, $route) {
                 $uri = $this->getRequest()->getUri()->getPath();
                 $match = preg_match_all($regexp, $uri, $matches);
