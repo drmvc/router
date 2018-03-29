@@ -200,17 +200,18 @@ class Router implements RouterInterface
     }
 
     /**
-     * Parse URI by Regexp from routes and return single route
+     * Find optimal route from array of routes by regexp and uri
      *
-     * @return  RouteInterface
+     * @return  array
      */
-    public function getRoute(): RouteInterface
+    private function getMatches(): array
     {
-        // Find route by regexp and URI
-        $matches = array_map(
+        // Extract URI of current query
+        $uri = $this->getRequest()->getUri()->getPath();
+
         // Foreach emulation
-            function($regexp, $route) {
-                $uri = $this->getRequest()->getUri()->getPath();
+        return array_map(
+            function($regexp, $route) use ($uri) {
                 $match = preg_match_all($regexp, $uri, $matches);
 
                 // If something found
@@ -226,6 +227,17 @@ class Router implements RouterInterface
             // Array with values
             $this->getRoutes()
         );
+    }
+
+    /**
+     * Parse URI by Regexp from routes and return single route
+     *
+     * @return  RouteInterface
+     */
+    public function getRoute(): RouteInterface
+    {
+        // Find route by regexp and URI
+        $matches = $this->getMatches();
 
         // Cleanup the array of matches, then reindex array
         $matches = array_values(array_filter($matches));
