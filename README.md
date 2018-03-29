@@ -24,7 +24,7 @@ $router = new Router($request, $response);
 // Set routes
 $router
     ->get('/aaa/<action>/<action2>', DrMVC\Controllers\Index::class)
-    ->get('/bbb/zzz/ccc', DrMVC\Controllers\Index::class . ':default')
+    ->get('/bbb/zzz/ccc', 'App\Controllers\Index:default')
     ->get(
         '/action/zzz',
         function() {
