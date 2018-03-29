@@ -88,7 +88,7 @@ interface RouterInterface
 
     /**
      * Get current error object
-     * @return callable|string
+     * @return callable|object
      */
     public function getError();
 
