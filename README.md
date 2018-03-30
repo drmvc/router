@@ -3,6 +3,7 @@
 [![Total Downloads](https://poser.pugx.org/drmvc/router/downloads)](https://packagist.org/packages/drmvc/router)
 [![License](https://poser.pugx.org/drmvc/router/license)](https://packagist.org/packages/drmvc/router)
 [![PHP 7 ready](https://php7ready.timesplinter.ch/drmvc/router/master/badge.svg)](https://travis-ci.org/drmvc/router)
+[![Code Climate](https://codeclimate.com/github/drmvc/router/badges/gpa.svg)](https://codeclimate.com/github/drmvc/router)
 [![Scrutinizer CQ](https://scrutinizer-ci.com/g/drmvc/router/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/drmvc/router/)
 
 # DrMVC\Router
