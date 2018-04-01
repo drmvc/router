@@ -37,6 +37,11 @@ class Route implements RouteInterface
     private $_response;
 
     /**
+     * @var string
+     */
+    private $_method;
+
+    /**
      * Route constructor.
      *
      * @param   string $method Method of received query
@@ -56,6 +61,28 @@ class Route implements RouteInterface
             ->setRoute($method, $regexp, $callable)
             ->setRequest($request)
             ->setResponse($response);
+    }
+
+    /**
+     * Set current method of object
+     *
+     * @param   string $method
+     * @return  RouteInterface
+     */
+    public function setMethod(string $method): RouteInterface
+    {
+        $this->_method = $method;
+        return $this;
+    }
+
+    /**
+     * Get method of current object
+     *
+     * @return string
+     */
+    public function getMethod(): string
+    {
+        return $this->_method;
     }
 
     /**
@@ -94,6 +121,7 @@ class Route implements RouteInterface
         $callable
     ): RouteInterface {
         return $this
+            ->setMethod($method)
             ->setRegexp($regexp)
             ->setCallback($callable);
     }
@@ -115,9 +143,9 @@ class Route implements RouteInterface
     /**
      * Get PSR request
      *
-     * @return  ServerRequestInterface
+     * @return  ServerRequestInterface|null
      */
-    public function getRequest(): ServerRequestInterface
+    public function getRequest()
     {
         return $this->_request;
     }
@@ -139,9 +167,9 @@ class Route implements RouteInterface
     /**
      * Get RSR-7 response
      *
-     * @return  ResponseInterface
+     * @return  ResponseInterface|null
      */
-    public function getResponse(): ResponseInterface
+    public function getResponse()
     {
         return $this->_response;
     }

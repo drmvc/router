@@ -14,6 +14,21 @@ interface RouteInterface
     const DEFAULT_ACTION = 'index';
 
     /**
+     * Set current method of object
+     *
+     * @param   string $method
+     * @return  RouteInterface
+     */
+    public function setMethod(string $method): RouteInterface;
+
+    /**
+     * Get method of current object
+     *
+     * @return string
+     */
+    public function getMethod(): string;
+
+    /**
      * Set PSR-7 request
      *
      * @param   ServerRequestInterface $request PSR-7 request
@@ -24,9 +39,9 @@ interface RouteInterface
     /**
      * Get PSR-7 request
      *
-     * @return  ServerRequestInterface
+     * @return  ServerRequestInterface|null
      */
-    public function getRequest(): ServerRequestInterface;
+    public function getRequest();
 
     /**
      * Set PSR-7 response
@@ -39,9 +54,9 @@ interface RouteInterface
     /**
      * Get PSR-7 response
      *
-     * @return  ResponseInterface
+     * @return  ResponseInterface|null
      */
-    public function getResponse(): ResponseInterface;
+    public function getResponse();
 
     /**
      * Set variables of current class
