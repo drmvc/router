@@ -2,12 +2,10 @@
 
 namespace DrMVC\Router;
 
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-
 /**
  * Class Error
  * @package DrMVC\Router
+ * @since 3.0
  */
 class Error extends Route
 {

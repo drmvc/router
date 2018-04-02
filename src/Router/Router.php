@@ -8,12 +8,15 @@ use Psr\Http\Message\ResponseInterface;
 /**
  * Class Router
  * @package DrMVC\Router
+ * @method Router options(string $pattern, callable $callable): Router
  * @method Router get(string $pattern, callable $callable): Router
+ * @method Router head(string $pattern, callable $callable): Router
  * @method Router post(string $pattern, callable $callable): Router
  * @method Router put(string $pattern, callable $callable): Router
  * @method Router delete(string $pattern, callable $callable): Router
- * @method Router option(string $pattern, callable $callable): Router
- * @since 3.0.0
+ * @method Router trace(string $pattern, callable $callable): Router
+ * @method Router connect(string $pattern, callable $callable): Router
+ * @since 3.0
  */
 class Router implements RouterInterface
 {
@@ -83,17 +86,14 @@ class Router implements RouterInterface
     }
 
     /**
-     * Callable must be only selected methods
+     * Check if passed methods in allowed list
      *
-     * @param   array $methods
-     * @param   string $pattern
-     * @param   callable|string $callable
-     * @return  RouterInterface
+     * @param   array $methods list of methods for check
+     * @return  array
      */
-    public function map(array $methods, string $pattern, $callable): RouterInterface
+    public function checkMethods(array $methods): array
     {
-        // Check if method in allowed list
-        $methods = array_map(
+        return array_map(
             function($method) {
                 $method = strtolower($method);
 
@@ -110,6 +110,20 @@ class Router implements RouterInterface
             },
             $methods
         );
+    }
+
+    /**
+     * Callable must be only selected methods
+     *
+     * @param   array $methods
+     * @param   string $pattern
+     * @param   callable|string $callable
+     * @return  RouterInterface
+     */
+    public function map(array $methods, string $pattern, $callable): RouterInterface
+    {
+        // Check if method in allowed list
+        $methods = $this->checkMethods($methods);
 
         // Set new route with parameters
         $this->set($methods, [$pattern, $callable]);
@@ -126,7 +140,10 @@ class Router implements RouterInterface
      */
     public function any(string $pattern, $callable): RouterInterface
     {
-        return $this->map(self::METHODS, $pattern, $callable);
+        // Set new route with all methods
+        $this->set(self::METHODS, [$pattern, $callable]);
+
+        return $this;
     }
 
     /**
@@ -206,20 +223,14 @@ class Router implements RouterInterface
     }
 
     /**
-     * Find optimal route from array of routes by regexp and uri
+     * Find route object by URL nad method
      *
+     * @param   string $uri
+     * @param   string $method
      * @return  array
      */
-    private function getMatches(): array
+    private function checkMatches(string $uri, string $method): array
     {
-        // Extract URI of current query
-        $uri = $this->getRequest()->getUri()->getPath();
-
-        // Extract method of current request
-        $method = $this->getRequest()->getMethod();
-        $method = strtolower($method);
-
-        // Foreach emulation
         return array_map(
             function($regexp, $route) use ($uri, $method) {
                 $match = preg_match_all($regexp, $uri, $matches);
@@ -237,6 +248,24 @@ class Router implements RouterInterface
             // Array with values
             $this->getRoutes()
         );
+    }
+
+    /**
+     * Find optimal route from array of routes by regexp and uri
+     *
+     * @return  array
+     */
+    private function getMatches(): array
+    {
+        // Extract URI of current query
+        $uri = $this->getRequest()->getUri()->getPath();
+
+        // Extract method of current request
+        $method = $this->getRequest()->getMethod();
+        $method = strtolower($method);
+
+        // Foreach emulation
+        return $this->checkMatches($uri, $method);
     }
 
     /**

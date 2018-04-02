@@ -5,6 +5,7 @@ namespace DrMVC\Router;
 /**
  * Class Exception
  * @package DrMVC\Router
+ * @since 3.0
  */
 class Exception extends \Exception
 {

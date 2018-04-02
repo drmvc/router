@@ -8,7 +8,7 @@ use Psr\Http\Message\ResponseInterface;
 /**
  * Class Route
  * @package DrMVC\Router
- * @since 3.0.0
+ * @since 3.0
  */
 class Route implements RouteInterface
 {

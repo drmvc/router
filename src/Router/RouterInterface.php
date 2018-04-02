@@ -8,13 +8,14 @@ use Psr\Http\Message\ResponseInterface;
 /**
  * Interface RouterInterface
  * @package DrMVC\Router
+ * @since 3.0
  */
 interface RouterInterface
 {
     /**
      * List of all available methods
      */
-    const METHODS = ['get', 'post', 'put', 'update', 'delete', 'option'];
+    const METHODS = ['options', 'get', 'head', 'post', 'put', 'delete', 'trace', 'connect'];
 
     /**
      * @param   string $method
