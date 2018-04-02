@@ -7,7 +7,8 @@ use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class Route
- * @package DrMVC
+ * @package DrMVC\Router
+ * @since 3.0.0
  */
 class Route implements RouteInterface
 {
@@ -37,28 +38,28 @@ class Route implements RouteInterface
     private $_response;
 
     /**
-     * @var string
+     * @var array
      */
-    private $_method;
+    private $_methods = [];
 
     /**
      * Route constructor.
      *
-     * @param   string $method Method of received query
+     * @param   array $methods Method of received query
      * @param   string $regexp Regular expression
      * @param   callable|string $callable Class name or callback
      * @param   ServerRequestInterface $request PSR-7 request
      * @param   ResponseInterface $response RSP-7 response
      */
     public function __construct(
-        string $method,
+        array $methods,
         string $regexp,
         $callable,
         ServerRequestInterface $request = null,
         ResponseInterface $response = null
     ) {
         $this
-            ->setRoute($method, $regexp, $callable)
+            ->setRoute($methods, $regexp, $callable)
             ->setRequest($request)
             ->setResponse($response);
     }
@@ -66,23 +67,34 @@ class Route implements RouteInterface
     /**
      * Set current method of object
      *
-     * @param   string $method
+     * @param   array $methods
      * @return  RouteInterface
      */
-    public function setMethod(string $method): RouteInterface
+    public function setMethods(array $methods): RouteInterface
     {
-        $this->_method = $method;
+        $this->_methods = $methods;
         return $this;
     }
 
     /**
      * Get method of current object
      *
-     * @return string
+     * @return array
      */
-    public function getMethod(): string
+    public function getMethods(): array
     {
-        return $this->_method;
+        return $this->_methods;
+    }
+
+    /**
+     * Check if method is in set
+     *
+     * @param   string $method
+     * @return  bool
+     */
+    public function checkMethod(string $method): bool
+    {
+        return \in_array($method, $this->getMethods(), false);
     }
 
     /**
@@ -110,18 +122,18 @@ class Route implements RouteInterface
     /**
      * Set single route
      *
-     * @param   string $method Method of received query
+     * @param   array $methods Method of received query
      * @param   string $regexp Regular expression
      * @param   callable|string $callable Class name or callback
      * @return  RouteInterface
      */
     public function setRoute(
-        string $method,
+        array $methods,
         string $regexp,
         $callable
     ): RouteInterface {
         return $this
-            ->setMethod($method)
+            ->setMethods($methods)
             ->setRegexp($regexp)
             ->setCallback($callable);
     }

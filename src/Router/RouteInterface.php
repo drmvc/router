@@ -7,7 +7,7 @@ use Psr\Http\Message\ResponseInterface;
 
 /**
  * Interface RouteInterface
- * @package DrMVC\Router\Interfaces
+ * @package DrMVC\Router
  */
 interface RouteInterface
 {
@@ -16,17 +16,25 @@ interface RouteInterface
     /**
      * Set current method of object
      *
-     * @param   string $method
+     * @param   array $methods
      * @return  RouteInterface
      */
-    public function setMethod(string $method): RouteInterface;
+    public function setMethods(array $methods): RouteInterface;
 
     /**
      * Get method of current object
      *
-     * @return string
+     * @return array
      */
-    public function getMethod(): string;
+    public function getMethods(): array;
+
+    /**
+     * Check if method is in set
+     *
+     * @param   string $method
+     * @return  bool
+     */
+    public function checkMethod(string $method): bool;
 
     /**
      * Set PSR-7 request
@@ -106,13 +114,13 @@ interface RouteInterface
     /**
      * Set single route
      *
-     * @param   string $method Method of received query
+     * @param   array $methods Method of received query
      * @param   string $regexp Regular expression
      * @param   callable|string $callable Class name or callback
      * @return  RouteInterface
      */
     public function setRoute(
-        string $method,
+        array $methods,
         string $regexp,
         $callable
     ): RouteInterface;

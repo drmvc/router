@@ -7,7 +7,7 @@ use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class Router
- * @package DrMVC
+ * @package DrMVC\Router
  * @method Router get(string $pattern, callable $callable): Router
  * @method Router post(string $pattern, callable $callable): Router
  * @method Router put(string $pattern, callable $callable): Router
@@ -62,7 +62,7 @@ class Router implements RouterInterface
     public function __call(string $method, array $args): RouterInterface
     {
         if (\in_array($method, self::METHODS, false)) {
-            $this->set($method, $args);
+            $this->set([$method], $args);
         }
         return $this;
     }
@@ -70,14 +70,14 @@ class Router implements RouterInterface
     /**
      * Abstraction of setter
      *
-     * @param   string $method
+     * @param   array $methods
      * @param   array $args
      * @return  RouterInterface
      */
-    private function set(string $method, array $args): RouterInterface
+    private function set(array $methods, array $args): RouterInterface
     {
         list($pattern, $callable) = $args;
-        $route = new Route($method, $pattern, $callable, $this->getRequest(), $this->getResponse());
+        $route = new Route($methods, $pattern, $callable, $this->getRequest(), $this->getResponse());
         $this->setRoute($route);
         return $this;
     }
@@ -93,7 +93,7 @@ class Router implements RouterInterface
     public function map(array $methods, string $pattern, $callable): RouterInterface
     {
         array_map(
-            function($method) use ($pattern, $callable) {
+            function($method) {
                 $method = strtolower($method);
 
                 try {
@@ -103,11 +103,12 @@ class Router implements RouterInterface
                 } catch (Exception $e) {
                     // Catch empty because __construct overloaded
                 }
-
-                $this->$method($pattern, $callable);
             },
             $methods
         );
+
+        $this->set($methods, [$pattern, $callable]);
+
         return $this;
     }
 
@@ -209,13 +210,17 @@ class Router implements RouterInterface
         // Extract URI of current query
         $uri = $this->getRequest()->getUri()->getPath();
 
+        // Extract method of current request
+        $method = $this->getRequest()->getMethod();
+        $method = strtolower($method);
+
         // Foreach emulation
         return array_map(
-            function($regexp, $route) use ($uri) {
+            function($regexp, $route) use ($uri, $method) {
                 $match = preg_match_all($regexp, $uri, $matches);
 
-                // If something found
-                if ($match) {
+                // If something found and method is correct
+                if ($match && $route->checkMethod($method)) {
                     // Set array of variables
                     $route->setVariables($matches);
                     return $route;
@@ -243,13 +248,11 @@ class Router implements RouterInterface
         $matches = array_values(array_filter($matches));
 
         // If we have some classes in result of regexp
-        if (!empty($matches)) {
+        $result = !empty($matches)
             // Take first from matches
-            $result = $matches[0]; // Here the Route() object
-        } else {
+            ? $matches[0] // Here the Route() object
             // Create new object with error inside
-            $result = $this->getError();
-        }
+            : $this->getError();
 
         $result->setRequest($this->getRequest());
         $result->setResponse($this->getResponse());

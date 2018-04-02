@@ -2,10 +2,17 @@
 
 namespace DrMVC\Router;
 
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+
+/**
+ * Class Error
+ * @package DrMVC\Router
+ */
 class Error extends Route
 {
-    public function __construct(string $method = 'get', string $pattern = 'error', $callable = __CLASS__)
+    public function __construct(array $methods = ['get'], string $regexp = 'error', $callable = '')
     {
-        parent::__construct($method, $pattern, $callable);
+        parent::__construct($methods, $regexp, $callable);
     }
 }

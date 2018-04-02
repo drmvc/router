@@ -22,8 +22,8 @@ $router = new Router($request, $response);
 // Set routes
 $router
     ->get('/aaa/<action>/<action2>', DrMVC\Router\Error::class)
-    ->get('/bbb/zzz/ccc', 'App\Controllers\Index:default')
-    ->get(
+    ->post('/bbb/zzz/ccc', 'App\Controllers\Index:default')
+    ->put(
         '/action/zzz',
         function() {
             echo "action\n";
