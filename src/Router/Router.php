@@ -92,21 +92,26 @@ class Router implements RouterInterface
      */
     public function map(array $methods, string $pattern, $callable): RouterInterface
     {
-        array_map(
+        // Check if method in allowed list
+        $methods = array_map(
             function($method) {
                 $method = strtolower($method);
 
                 try {
                     if (!\in_array($method, self::METHODS, false)) {
-                        throw new Exception("Value \"$method\" is not in array");
+                        throw new Exception("Method \"$method\" is not in allowed list [" . implode(',',
+                                self::METHODS) . ']');
                     }
                 } catch (Exception $e) {
                     // Catch empty because __construct overloaded
                 }
+
+                return $method;
             },
             $methods
         );
 
+        // Set new route with parameters
         $this->set($methods, [$pattern, $callable]);
 
         return $this;

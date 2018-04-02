@@ -8,6 +8,7 @@ use Zend\Diactoros\Uri;
 use DrMVC\Router;
 
 // Generate url
+//$url = new Uri('https://example.com');
 $url = new Uri('https://example.com/aaa/zzz/bbb');
 //$url = new Uri('https://example.com/aaa/zzz');
 
@@ -21,6 +22,7 @@ $router = new Router($request, $response);
 
 // Set routes
 $router
+    ->get('', 'App\Controllers\Index:default')
     ->get('/aaa/<action>/<action2>', DrMVC\Router\Error::class)
     ->post('/bbb/zzz/ccc', 'App\Controllers\Index:default')
     ->put(
