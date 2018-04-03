@@ -8,7 +8,7 @@
 
 # DrMVC\Router
 
-Simple router based on PSR-7 HTTP Message implementation by Zend.
+Simple router based on PSR-7 HTTP Message recommendation.
 
     composer require drmvc/router
 

@@ -1,9 +1,13 @@
 {
   "name": "drmvc/router",
   "type": "library",
-  "description": "Router",
+  "description": "Simple router based on PSR-7 HTTP Message recommendation",
   "homepage": "https://drmvc.com/",
   "license": "MIT",
+  "keywords": [
+    "router",
+    "psr-7"
+  ],
   "authors": [
     {
       "name": "Paul Rock",
