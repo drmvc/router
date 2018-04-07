@@ -147,20 +147,6 @@ class Router implements RouterInterface, MethodsInterface
     }
 
     /**
-     * Set error method
-     *
-     * @param   callable|string $callable
-     * @return  RouterInterface
-     */
-    public function error($callable): RouterInterface
-    {
-        // Set new route with all methods
-        $this->set(['get'], ['error', $callable]);
-
-        return $this;
-    }
-
-    /**
      * @param   mixed $request
      * @return  RouterInterface
      */
@@ -179,6 +165,8 @@ class Router implements RouterInterface, MethodsInterface
     }
 
     /**
+     * Set PSR-7 response object
+     *
      * @param   mixed $response
      * @return  RouterInterface
      */
@@ -189,11 +177,24 @@ class Router implements RouterInterface, MethodsInterface
     }
 
     /**
-     * @return ResponseInterface
+     * Get PSR-7 response object
+     *
+     * @return  ResponseInterface
      */
     public function getResponse(): ResponseInterface
     {
         return $this->_response;
+    }
+
+    /**
+     * Set error method
+     *
+     * @param   callable|string $error
+     * @return  RouterInterface
+     */
+    public function error($error): RouterInterface
+    {
+        return $this->setError($error);
     }
 
     /**

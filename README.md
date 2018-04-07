@@ -14,6 +14,8 @@ Simple router based on PSR-7 HTTP Message recommendation.
 
 ## How to use
 
+More examples you can find [here](extra).
+
 ```php
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';

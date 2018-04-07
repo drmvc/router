@@ -182,9 +182,8 @@ class RouterTest extends TestCase
             return 'zxc';
         };
         $obj->error($callback);
-        $route = $obj->getError();
-        $cb = $route->getCallback();
-        $this->assertInternalType('object', $route);
-        $this->assertInstanceOf(Error::class, $route);
+        $cb = $obj->getError();
+        $this->assertInternalType('callable', $cb);
+        $this->assertEquals('zxc', $cb());
     }
 }
