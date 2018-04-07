@@ -170,4 +170,21 @@ class RouterTest extends TestCase
         $this->assertInternalType('callable', $cb);
         $this->assertEquals('qqq', $cb());
     }
+
+    public function testError()
+    {
+        $url = new Uri('https://example.com');
+        $req = new ServerRequest([], [], $url);
+        $res = new Response();
+        $obj = new Router($req, $res);
+
+        $callback = function() {
+            return 'zxc';
+        };
+        $obj->error($callback);
+        $route = $obj->getError();
+        $cb = $route->getCallback();
+        $this->assertInternalType('object', $route);
+        $this->assertInstanceOf(Error::class, $route);
+    }
 }

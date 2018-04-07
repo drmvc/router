@@ -18,7 +18,7 @@ use Psr\Http\Message\ResponseInterface;
  * @method Router connect(string $pattern, callable $callable): Router
  * @since 3.0
  */
-class Router implements RouterInterface
+class Router implements RouterInterface, MethodsInterface
 {
     /**
      * Array with all available routes
@@ -142,6 +142,20 @@ class Router implements RouterInterface
     {
         // Set new route with all methods
         $this->set(self::METHODS, [$pattern, $callable]);
+
+        return $this;
+    }
+
+    /**
+     * Set error method
+     *
+     * @param   callable|string $callable
+     * @return  RouterInterface
+     */
+    public function error($callable): RouterInterface
+    {
+        // Set new route with all methods
+        $this->set(['get'], ['error', $callable]);
 
         return $this;
     }
