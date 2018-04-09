@@ -15,6 +15,15 @@ interface MethodsInterface
     const METHODS = ['options', 'get', 'head', 'post', 'put', 'delete', 'trace', 'connect'];
 
     /**
+     * Abstraction of setter
+     *
+     * @param   array $methods
+     * @param   array $args
+     * @return  MethodsInterface
+     */
+    public function set(array $methods, array $args): MethodsInterface;
+
+    /**
      * @param   string $method
      * @param   array $args
      * @return  MethodsInterface

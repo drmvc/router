@@ -75,9 +75,9 @@ class Router implements RouterInterface, MethodsInterface
      *
      * @param   array $methods
      * @param   array $args
-     * @return  RouterInterface
+     * @return  MethodsInterface
      */
-    private function set(array $methods, array $args): RouterInterface
+    public function set(array $methods, array $args): MethodsInterface
     {
         list($pattern, $callable) = $args;
         $route = new Route($methods, $pattern, $callable);

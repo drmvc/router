@@ -152,6 +152,25 @@ class RouterTest extends TestCase
         $this->assertEquals('qqq', $cb());
     }
 
+    public function testSet()
+    {
+        $url = new Uri('https://example.com/test');
+        $req = new ServerRequest([], [], $url);
+        $res = new Response();
+        $obj = new Router($req, $res);
+
+        $callback = function() {
+            return 'zxczxc';
+        };
+        $obj->set(['get'], ['/test', $callback]);
+        $route = $obj->getRoute();
+        $cb = $route->getCallback();
+        $this->assertInternalType('object', $route);
+        $this->assertInstanceOf(Route::class, $route);
+        $this->assertInternalType('callable', $cb);
+        $this->assertEquals('zxczxc', $cb());
+    }
+
     public function testAny()
     {
         $url = new Uri('https://example.com');
