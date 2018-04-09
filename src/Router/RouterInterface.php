@@ -12,6 +12,14 @@ use Psr\Http\Message\ResponseInterface;
  */
 interface RouterInterface
 {
+    /**
+     * Abstraction of setter
+     *
+     * @param   array $methods
+     * @param   array $args
+     * @return  RouterInterface
+     */
+    public function set(array $methods, array $args): RouterInterface;
 
     /**
      * Set PSR-7 request
