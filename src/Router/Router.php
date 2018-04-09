@@ -60,9 +60,9 @@ class Router implements RouterInterface, MethodsInterface
      *
      * @param   string $method
      * @param   array $args
-     * @return  RouterInterface
+     * @return  MethodsInterface
      */
-    public function __call(string $method, array $args): RouterInterface
+    public function __call(string $method, array $args): MethodsInterface
     {
         if (\in_array($method, self::METHODS, false)) {
             $this->set([$method], $args);
@@ -80,7 +80,7 @@ class Router implements RouterInterface, MethodsInterface
     private function set(array $methods, array $args): RouterInterface
     {
         list($pattern, $callable) = $args;
-        $route = new Route($methods, $pattern, $callable, $this->getRequest(), $this->getResponse());
+        $route = new Route($methods, $pattern, $callable);
         $this->setRoute($route);
         return $this;
     }
@@ -118,9 +118,9 @@ class Router implements RouterInterface, MethodsInterface
      * @param   array $methods
      * @param   string $pattern
      * @param   callable|string $callable
-     * @return  RouterInterface
+     * @return  MethodsInterface
      */
-    public function map(array $methods, string $pattern, $callable): RouterInterface
+    public function map(array $methods, string $pattern, $callable): MethodsInterface
     {
         // Check if method in allowed list
         $methods = $this->checkMethods($methods);
@@ -136,9 +136,9 @@ class Router implements RouterInterface, MethodsInterface
      *
      * @param   string $pattern
      * @param   callable|string $callable
-     * @return  RouterInterface
+     * @return  MethodsInterface
      */
-    public function any(string $pattern, $callable): RouterInterface
+    public function any(string $pattern, $callable): MethodsInterface
     {
         // Set new route with all methods
         $this->set(self::METHODS, [$pattern, $callable]);
@@ -190,11 +190,12 @@ class Router implements RouterInterface, MethodsInterface
      * Set error method
      *
      * @param   callable|string $error
-     * @return  RouterInterface
+     * @return  MethodsInterface
      */
-    public function error($error): RouterInterface
+    public function error($error): MethodsInterface
     {
-        return $this->setError($error);
+        $this->setError($error);
+        return $this;
     }
 
     /**
@@ -302,9 +303,6 @@ class Router implements RouterInterface, MethodsInterface
             ? $matches[0] // Here the Route() object
             // Create new object with error inside
             : $this->getError();
-
-        $result->setRequest($this->getRequest());
-        $result->setResponse($this->getResponse());
 
         return $result;
     }

@@ -32,5 +32,7 @@ $router
         }
     );
 
+print_r($router);
+
 $parsed = $router->getRoute();
 print_r($parsed);

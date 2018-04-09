@@ -2,9 +2,6 @@
 
 namespace DrMVC\Router;
 
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\ResponseInterface;
-
 /**
  * Interface RouterInterface
  * @package DrMVC\Router
@@ -20,18 +17,18 @@ interface MethodsInterface
     /**
      * @param   string $method
      * @param   array $args
-     * @return  RouterInterface
+     * @return  MethodsInterface
      */
-    public function __call(string $method, array $args): RouterInterface;
+    public function __call(string $method, array $args): MethodsInterface;
 
     /**
      * Any method should be callable
      *
      * @param   string $pattern
      * @param   callable|string $callable
-     * @return  RouterInterface
+     * @return  MethodsInterface
      */
-    public function any(string $pattern, $callable): RouterInterface;
+    public function any(string $pattern, $callable): MethodsInterface;
 
     /**
      * Callable must be only selected methods
@@ -39,25 +36,25 @@ interface MethodsInterface
      * @param   array $methods
      * @param   string $pattern
      * @param   callable|string $callable
-     * @return  RouterInterface
+     * @return  MethodsInterface
      */
-    public function map(array $methods, string $pattern, $callable): RouterInterface;
+    public function map(array $methods, string $pattern, $callable): MethodsInterface;
 
     /**
      * Group routes
      *
      * @param   string $pattern
      * @param   callable|string $callable
-     * @return  RouterInterface
+     * @return  MethodsInterface
      */
     // TODO: Implement this method
-    //public function group(string $pattern, $callable): RouterInterface;
+    //public function group(string $pattern, $callable): MethodsInterface;
 
     /**
      * Set error method
      *
      * @param   callable|string $callable
-     * @return  RouterInterface
+     * @return  MethodsInterface
      */
-    public function error($callable): RouterInterface;
+    public function error($callable): MethodsInterface;
 }
