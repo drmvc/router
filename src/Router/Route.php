@@ -28,16 +28,6 @@ class Route implements RouteInterface
     private $_callback;
 
     /**
-     * @var ServerRequestInterface
-     */
-    private $_request;
-
-    /**
-     * @var ResponseInterface
-     */
-    private $_response;
-
-    /**
      * @var array
      */
     private $_methods = [];
@@ -117,11 +107,8 @@ class Route implements RouteInterface
      * @param   callable|string $callable Class name or callback
      * @return  RouteInterface
      */
-    public function setRoute(
-        array $methods,
-        string $regexp,
-        $callable
-    ): RouteInterface {
+    public function setRoute(array $methods, string $regexp, $callable): RouteInterface
+    {
         return $this
             ->setMethods($methods)
             ->setRegexp($regexp)

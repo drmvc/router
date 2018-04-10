@@ -56,10 +56,11 @@ interface RouterInterface
     public function setError($error): RouterInterface;
 
     /**
-     * Get current error object
-     * @return callable|object
+     * Get error class or closure
+     *
+     * @return  RouteInterface
      */
-    public function getError();
+    public function getError(): RouteInterface;
 
     /**
      * Add route into the array of routes
