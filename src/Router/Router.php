@@ -213,16 +213,11 @@ class Router implements RouterInterface, MethodsInterface
     /**
      * Get error class or closure
      *
-     * @return  callable|object
+     * @return  RouteInterface
      */
-    public function getError()
+    public function getError(): RouteInterface
     {
-        $error = $this->_error;
-        // If string inside then we work on class
-        if (\is_string($error)) {
-            $error = new $error();
-        }
-        return $error;
+        return new Route(['get'], 'error', $this->_error);
     }
 
     /**

@@ -48,20 +48,10 @@ class Route implements RouteInterface
      * @param   array $methods Method of received query
      * @param   string $regexp Regular expression
      * @param   callable|string $callable Class name or callback
-     * @param   ServerRequestInterface $request PSR-7 request
-     * @param   ResponseInterface $response RSP-7 response
      */
-    public function __construct(
-        array $methods,
-        string $regexp,
-        $callable,
-        ServerRequestInterface $request = null,
-        ResponseInterface $response = null
-    ) {
-        $this
-            ->setRoute($methods, $regexp, $callable)
-            ->setRequest($request)
-            ->setResponse($response);
+    public function __construct(array $methods, string $regexp, $callable)
+    {
+        $this->setRoute($methods, $regexp, $callable);
     }
 
     /**
@@ -136,54 +126,6 @@ class Route implements RouteInterface
             ->setMethods($methods)
             ->setRegexp($regexp)
             ->setCallback($callable);
-    }
-
-    /**
-     * Set PSR-7 request
-     *
-     * @param   ServerRequestInterface $request - PSR-7 request
-     * @return  RouteInterface
-     */
-    public function setRequest(ServerRequestInterface $request = null): RouteInterface
-    {
-        if (null !== $request) {
-            $this->_request = $request;
-        }
-        return $this;
-    }
-
-    /**
-     * Get PSR request
-     *
-     * @return  ServerRequestInterface|null
-     */
-    public function getRequest()
-    {
-        return $this->_request;
-    }
-
-    /**
-     * Set RSR response
-     *
-     * @param   mixed $response
-     * @return  RouteInterface
-     */
-    public function setResponse(ResponseInterface $response = null): RouteInterface
-    {
-        if (!empty($response)) {
-            $this->_response = $response;
-        }
-        return $this;
-    }
-
-    /**
-     * Get RSR-7 response
-     *
-     * @return  ResponseInterface|null
-     */
-    public function getResponse()
-    {
-        return $this->_response;
     }
 
     /**

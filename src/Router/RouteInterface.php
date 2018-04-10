@@ -38,36 +38,6 @@ interface RouteInterface
     public function checkMethod(string $method): bool;
 
     /**
-     * Set PSR-7 request
-     *
-     * @param   ServerRequestInterface $request PSR-7 request
-     * @return  RouteInterface
-     */
-    public function setRequest(ServerRequestInterface $request = null): RouteInterface;
-
-    /**
-     * Get PSR-7 request
-     *
-     * @return  ServerRequestInterface|null
-     */
-    public function getRequest();
-
-    /**
-     * Set PSR-7 response
-     *
-     * @param   ResponseInterface $response RSP-7 response
-     * @return  RouteInterface
-     */
-    public function setResponse(ResponseInterface $response = null): RouteInterface;
-
-    /**
-     * Get PSR-7 response
-     *
-     * @return  ResponseInterface|null
-     */
-    public function getResponse();
-
-    /**
      * Set variables of current class
      *
      * @param   array $variables
@@ -120,10 +90,6 @@ interface RouteInterface
      * @param   callable|string $callable Class name or callback
      * @return  RouteInterface
      */
-    public function setRoute(
-        array $methods,
-        string $regexp,
-        $callable
-    ): RouteInterface;
+    public function setRoute(array $methods, string $regexp, $callable): RouteInterface;
 
 }

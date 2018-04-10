@@ -56,7 +56,7 @@ class RouterTest extends TestCase
 
         $error = $obj->getError();
         $this->assertInternalType('object', $error);
-        $this->assertInstanceOf(Error::class, $error);
+        $this->assertInstanceOf(Route::class, $error);
     }
 
     public function testSetError()
@@ -69,8 +69,10 @@ class RouterTest extends TestCase
         });
 
         $error = $obj->getError();
-        $this->assertInternalType('callable', $error);
-        $this->assertEquals('asd', $error());
+        $this->assertInternalType('object', $error);
+
+        $cb = $error->getCallback();
+        $this->assertEquals('asd', $cb());
     }
 
     public function testGetRoute()
@@ -81,7 +83,7 @@ class RouterTest extends TestCase
 
         $route = $obj->getRoute();
         $this->assertInternalType('object', $route);
-        $this->assertInstanceOf(Error::class, $route);
+        $this->assertInstanceOf(Route::class, $route);
     }
 
     public function testSetRoute()
@@ -201,8 +203,11 @@ class RouterTest extends TestCase
             return 'zxc';
         };
         $obj->error($callback);
-        $cb = $obj->getError();
-        $this->assertInternalType('callable', $cb);
+
+        $error = $obj->getError();
+        $this->assertInternalType('object', $error);
+
+        $cb = $error->getCallback();
         $this->assertEquals('zxc', $cb());
     }
 }

@@ -63,54 +63,6 @@ class RouteTest extends TestCase
         $this->assertEquals($variables['key'], 'value');
     }
 
-    public function testGetRequest()
-    {
-        $server_request = ServerRequestFactory::fromGlobals();
-        $obj = new Route([], '', '', $server_request);
-        $request = $obj->getRequest();
-
-        $this->assertInternalType('object', $request);
-        $this->assertInstanceOf(ServerRequest::class, $request);
-    }
-
-    public function testSetRequest()
-    {
-        $obj = new Route([], '', '');
-        $request = $obj->getRequest();
-
-        $this->assertInternalType('null', $request);
-
-        $server_request = ServerRequestFactory::fromGlobals();
-        $obj->setRequest($server_request);
-        $request2 = $obj->getRequest();
-
-        $this->assertInstanceOf(ServerRequest::class, $request2);
-    }
-
-    public function testSetResponse()
-    {
-        $server_response = new Response();
-        $obj = new Route([], '', '', null, $server_response);
-        $response = $obj->getResponse();
-
-        $this->assertInternalType('object', $response);
-        $this->assertInstanceOf(Response::class, $response);
-    }
-
-    public function testGetResponse()
-    {
-        $obj = new Route([], '', '');
-        $response = $obj->getResponse();
-
-        $this->assertInternalType('null', $response);
-
-        $server_response = new Response();
-        $obj->setResponse($server_response);
-        $response2 = $obj->getResponse();
-
-        $this->assertInstanceOf(Response::class, $response2);
-    }
-
     public function testGetCallback()
     {
         $callable = function() {
@@ -168,20 +120,13 @@ class RouteTest extends TestCase
             return 'asd';
         };
 
-        $server_request = ServerRequestFactory::fromGlobals();
-        $server_response = new Response();
-
-        $obj = new Route(['get', 'put', 'post'], '/text', $callable, $server_request, $server_response);
+        $obj = new Route(['get', 'put', 'post'], '/text', $callable);
         $methods = $obj->getMethods();
         $regexp = $obj->getRegexp();
         $callback = $obj->getCallback();
-        $request = $obj->getRequest();
-        $response = $obj->getResponse();
 
         $this->assertCount(3, $methods);
         $this->assertEquals('#^/text$#u', $regexp);
         $this->assertInternalType('callable', $callback);
-        $this->assertInstanceOf(ServerRequest::class, $request);
-        $this->assertInstanceOf(Response::class, $response);
     }
 }
