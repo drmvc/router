@@ -89,6 +89,7 @@ class Router implements RouterInterface, MethodsInterface
      * Check if passed methods in allowed list
      *
      * @param   array $methods list of methods for check
+     * @throws  Exception
      * @return  array
      */
     public function checkMethods(array $methods): array
@@ -96,16 +97,10 @@ class Router implements RouterInterface, MethodsInterface
         return array_map(
             function($method) {
                 $method = strtolower($method);
-
-                try {
-                    if (!\in_array($method, self::METHODS, false)) {
-                        throw new Exception("Method \"$method\" is not in allowed list [" . implode(',',
-                                self::METHODS) . ']');
-                    }
-                } catch (Exception $e) {
-                    // Catch empty because __construct overloaded
+                if (!\in_array($method, self::METHODS, false)) {
+                    throw new Exception("Method \"$method\" is not in allowed list [" . implode(',',
+                            self::METHODS) . ']');
                 }
-
                 return $method;
             },
             $methods
@@ -118,6 +113,7 @@ class Router implements RouterInterface, MethodsInterface
      * @param   array $methods
      * @param   string $pattern
      * @param   callable|string $callable
+     * @throws  Exception
      * @return  MethodsInterface
      */
     public function map(array $methods, string $pattern, $callable): MethodsInterface

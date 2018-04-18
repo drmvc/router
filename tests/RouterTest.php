@@ -2,6 +2,7 @@
 
 namespace DrMVC\Router\Tests;
 
+use DrMVC\Router\Exception;
 use PHPUnit\Framework\TestCase;
 use Zend\Diactoros\ServerRequestFactory;
 use Zend\Diactoros\ServerRequest;
@@ -99,6 +100,16 @@ class RouterTest extends TestCase
         $route = $obj->getRoute();
         $this->assertInternalType('object', $route);
         $this->assertInstanceOf(Route::class, $route);
+    }
+
+    public function testCheckMethods()
+    {
+        $req = ServerRequestFactory::fromGlobals();
+        $res = new Response();
+        $obj = new Router($req, $res);
+
+        $this->expectException(Exception::class);
+        $obj->checkMethods(['dummy']);
     }
 
     public function testGetRoutes()
